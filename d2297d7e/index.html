@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How HTML pages now publish themselves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,440;9..144,560;9..144,640&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF9F4; --ink:#1B1915; --ink-soft:#5C574C; --ink-faint:#8A8478;
+    --rule:#E6E1D5; --rule-soft:#EFEBE1; --tint:#F3EFE6;
+    --accent:#B4552D;
+    --cold:#66708A; --cold-bg:#EBEDF2;
+    --cool:#34558B; --cool-bg:#E8EDF5;
+    --warm:#A8771C; --warm-bg:#F5EEDD;
+    --hot:#B4552D; --hot-bg:#F5E6E2;
+    --money:#2E7D52; --money-bg:#E9F2EC;
+    --maxw:1060px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#171511; --ink:#EDE9DF; --ink-soft:#B0AA9B; --ink-faint:#7E7869;
+      --rule:#332F27; --rule-soft:#2A2720; --tint:#211E18;
+      --accent:#D97B4F;
+      --cold:#8C96AE; --cold-bg:#21242C;
+      --cool:#7B9CCB; --cool-bg:#1C2331;
+      --warm:#C99A3F; --warm-bg:#2B2517;
+      --hot:#D97B4F; --hot-bg:#2D1E1A;
+      --money:#5DAD83; --money-bg:#1D2B23;
+    }
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+  body{background:var(--paper); color:var(--ink); font-family:'Inter',-apple-system,sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px}
+  ::selection{background:var(--accent); color:var(--paper)}
+
+  header{border-bottom:1px solid var(--rule)}
+  .topbar{display:flex; align-items:baseline; justify-content:space-between; padding:20px 0; gap:16px; flex-wrap:wrap}
+  .brand{font-family:'Fraunces',serif; font-weight:640; font-size:17px; letter-spacing:.01em}
+  .topmeta{display:flex; gap:20px; align-items:baseline; font-size:12.5px; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase}
+  .chip-open{color:var(--money); border:1px solid currentColor; border-radius:99px; padding:2px 11px; font-weight:600; font-size:11.5px}
+
+  .hero{padding:72px 0 56px}
+  .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:20px}
+  h1{font-family:'Fraunces',serif; font-weight:560; font-size:clamp(34px,5vw,54px); line-height:1.12; letter-spacing:-.01em; max-width:17ch}
+  .lede{margin-top:24px; font-size:18px; line-height:1.65; color:var(--ink-soft); max-width:62ch}
+  .lede strong{color:var(--ink); font-weight:600}
+
+  .yardstick{margin-top:48px; border-top:1px solid var(--rule); display:grid; grid-template-columns:repeat(3,1fr)}
+  .ys{padding:22px 28px 4px 0; border-right:1px solid var(--rule)}
+  .ys:last-child{border-right:none}
+  .ys b{display:block; font-family:'Fraunces',serif; font-weight:560; font-size:30px; line-height:1.1; font-variant-numeric:tabular-nums; margin-bottom:6px}
+  .ys span{font-size:13.5px; color:var(--ink-faint); line-height:1.5; display:block; max-width:26ch}
+
+  section{padding:64px 0; border-top:1px solid var(--rule)}
+  .sec-head{display:flex; align-items:baseline; gap:18px; margin-bottom:10px}
+  .sec-num{font-family:'Fraunces',serif; font-size:14px; color:var(--accent); font-weight:600; letter-spacing:.06em}
+  h2{font-family:'Fraunces',serif; font-weight:560; font-size:clamp(24px,3.2vw,32px); letter-spacing:-.005em}
+  .sec-sub{color:var(--ink-soft); max-width:64ch; margin-bottom:40px; font-size:15.5px}
+
+  /* the machine / pipeline */
+  .mlabels{display:flex; justify-content:space-between; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 6px; padding-left:64px}
+  .machine{position:relative}
+  .layer{display:grid; grid-template-columns:64px 1fr 230px; gap:0; position:relative}
+  .rail{position:relative; display:flex; justify-content:center}
+  .rail::before{content:""; position:absolute; top:0; bottom:0; width:2px; background:var(--rule); left:50%; transform:translateX(-50%)}
+  .layer:first-child .rail::before{top:28px}
+  .layer:last-child .rail::before{bottom:auto; height:30px}
+  .node{position:relative; z-index:2; margin-top:24px; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:#fff; box-shadow:0 0 0 4px var(--paper)}
+  .node.cold{background:var(--cold)} .node.cool{background:var(--cool)}
+  .node.warm{background:var(--warm)} .node.hot{background:var(--hot)} .node.money{background:var(--money)}
+  .lbody{padding:22px 30px 26px 22px; border-bottom:1px solid var(--rule-soft)}
+  .layer:last-child .lbody{border-bottom:none}
+  .lhead{display:flex; align-items:baseline; gap:12px; margin-bottom:7px; flex-wrap:wrap}
+  .lhead h3{font-family:'Fraunces',serif; font-weight:560; font-size:20px}
+  .ltag{font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:99px}
+  .ltag.cold{color:var(--cold); background:var(--cold-bg)} .ltag.cool{color:var(--cool); background:var(--cool-bg)}
+  .ltag.warm{color:var(--warm); background:var(--warm-bg)} .ltag.hot{color:var(--hot); background:var(--hot-bg)} .ltag.money{color:var(--money); background:var(--money-bg)}
+  .lbody p{font-size:14.5px; color:var(--ink-soft); line-height:1.6; max-width:54ch}
+  .lbody p b{color:var(--ink); font-weight:600}
+  .lbody code{font-family:ui-monospace,Menlo,monospace; font-size:12.5px; background:var(--tint); padding:1px 6px; border-radius:5px; color:var(--ink)}
+  .lout{padding:22px 0 26px 24px; border-bottom:1px solid var(--rule-soft); border-left:1px solid var(--rule-soft)}
+  .layer:last-child .lout{border-bottom:none}
+  .lout span{display:block; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:7px}
+  .lout strong{font-size:14px; font-weight:500; color:var(--ink); line-height:1.45}
+
+  /* command line */
+  .cmd{margin-top:4px; font-family:ui-monospace,Menlo,monospace; font-size:13.5px; background:var(--ink); color:var(--paper); border-radius:10px; padding:18px 22px; line-height:1.6; overflow-x:auto; white-space:nowrap}
+  .cmd .c-prompt{color:var(--accent); user-select:none}
+  .cmd .c-comment{color:var(--ink-faint)}
+  @media (prefers-color-scheme: dark){ .cmd{background:#0E0D0A; border:1px solid var(--rule)} }
+
+  /* why columns */
+  .why{display:grid; grid-template-columns:repeat(3,1fr); gap:36px}
+  .wy{border-top:2px solid var(--ink); padding-top:16px}
+  .wy h3{font-family:'Fraunces',serif; font-weight:560; font-size:18px; margin-bottom:9px}
+  .wy p{font-size:14px; color:var(--ink-soft); line-height:1.62}
+  .wy p b{color:var(--ink); font-weight:600}
+  .wy code{font-family:ui-monospace,Menlo,monospace; font-size:12px; background:var(--tint); padding:1px 5px; border-radius:5px}
+
+  /* table */
+  table{width:100%; border-collapse:collapse; margin-top:8px}
+  thead th{text-align:left; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); padding:0 16px 12px 0; border-bottom:1px solid var(--rule)}
+  tbody td{padding:15px 16px 15px 0; border-bottom:1px solid var(--rule-soft); font-size:14.5px; color:var(--ink-soft); vertical-align:top; line-height:1.55}
+  tbody td:first-child{color:var(--ink); font-weight:600; white-space:nowrap}
+  tbody td code{font-family:ui-monospace,Menlo,monospace; font-size:12.5px; color:var(--ink)}
+
+  /* gap grid */
+  .gap{display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--rule); border-radius:12px; overflow:hidden; margin-top:8px}
+  .gap-col{padding:28px 30px}
+  .gap-col:first-child{border-right:1px solid var(--rule); background:var(--money-bg)}
+  .gap-col.away{background:var(--hot-bg)}
+  .gap-col h4{font-family:'Fraunces',serif; font-weight:560; font-size:18px; margin-bottom:4px}
+  .gap-col .where{font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:16px}
+  .gap-row{display:flex; justify-content:space-between; gap:14px; padding:11px 0; border-bottom:1px solid var(--rule-soft); font-size:13.5px}
+  .gap-row:last-child{border-bottom:none}
+  .gap-row span{color:var(--ink-faint)}
+  .gap-row b{color:var(--ink); font-weight:600; text-align:right}
+  .gap-note{margin-top:22px; font-size:14px; color:var(--ink-soft); line-height:1.65; max-width:76ch}
+  .gap-note b{color:var(--ink); font-weight:600}
+
+  .move{background:var(--tint); border-radius:12px; padding:36px 40px; margin:64px 0 0; display:flex; gap:32px; align-items:flex-start; flex-wrap:wrap}
+  .move-mark{font-family:'Fraunces',serif; font-size:40px; line-height:1; color:var(--accent); font-weight:560}
+  .move-body{flex:1; min-width:260px}
+  .move h3{font-family:'Fraunces',serif; font-weight:560; font-size:21px; margin-bottom:8px}
+  .move p{font-size:14.5px; color:var(--ink-soft); line-height:1.65; max-width:76ch}
+  .move p b{color:var(--ink); font-weight:600}
+  .move code{font-family:ui-monospace,Menlo,monospace; font-size:13px; background:var(--paper); padding:1px 6px; border-radius:5px; color:var(--ink)}
+
+  footer{padding:36px 0 56px; font-size:12.5px; color:var(--ink-faint); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+  footer code{font-family:ui-monospace,Menlo,monospace; font-size:11.5px}
+
+  @media (max-width:920px){
+    .why{grid-template-columns:1fr; gap:0}
+    .wy{padding:22px 0; border-top:1px solid var(--rule)}
+    .wy:first-child{border-top:2px solid var(--ink)}
+    .yardstick{grid-template-columns:1fr}
+    .ys{border-right:none; border-bottom:1px solid var(--rule); padding:18px 0 14px}
+    .ys:last-child{border-bottom:none}
+    .layer{grid-template-columns:52px 1fr}
+    .lout{grid-column:2; border-left:none; padding:0 0 24px 22px}
+    .lbody{padding-bottom:14px; border-bottom:none}
+  }
+  @media (max-width:680px){
+    .wrap{padding:0 20px}
+    section{padding:48px 0}
+    .gap{grid-template-columns:1fr}
+    .gap-col:first-child{border-right:none; border-bottom:1px solid var(--rule)}
+    .move{padding:28px 24px}
+    .mlabels{padding-left:0}
+    .cmd{white-space:pre-wrap; word-break:break-word}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap topbar">
+    <div class="brand">HTML Creator · Auto-Publishing</div>
+    <div class="topmeta">
+      <span>14 June 2026</span>
+      <span>GitHub Pages</span>
+      <span class="chip-open">Live</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">What we built today · the publishing pipeline</div>
+    <h1>Every page I make now publishes itself.</h1>
+    <p class="lede">The goal was simple: <strong>make an HTML, get a shareable link, and keep a running record of past work</strong> — without ever opening a hosting dashboard. It's done. One command takes a page from your laptop to a live link, logs it on a dashboard, and opens it. Set up entirely from the terminal, riding on the GitHub login you already had.</p>
+
+    <div class="yardstick">
+      <div class="ys"><b>1</b><span>command does everything — slug, push, link, open</span></div>
+      <div class="ys"><b>0</b><span>hosting dashboards touched, then or ever</span></div>
+      <div class="ys"><b>$0</b><span>per month — free GitHub Pages, your own repo</span></div>
+    </div>
+  </div>
+
+  <!-- ============ 01 PIPELINE ============ -->
+  <section id="pipeline">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The pipeline</h2></div>
+    <p class="sec-sub">Five steps run end to end every time a page is made. You see the first one (the page) and the last one (it opens). The three in the middle are automatic.</p>
+
+    <div class="mlabels"><span>↓ local file</span><span>live, shareable link ↓</span></div>
+    <div class="machine">
+
+      <div class="layer">
+        <div class="rail"><span class="node cold">0</span></div>
+        <div class="lbody">
+          <div class="lhead"><h3>Generate</h3><span class="ltag cold">As before</span></div>
+          <p>The html-creator writes the page as a single self-contained file in your house style and saves it to <code>~/Downloads</code>. Nothing about making the page changed.</p>
+        </div>
+        <div class="lout"><span>Produces</span><strong>One <code>.html</code> file<br>on your laptop</strong></div>
+      </div>
+
+      <div class="layer">
+        <div class="rail"><span class="node cool">1</span></div>
+        <div class="lbody">
+          <div class="lhead"><h3>Stamp</h3><span class="ltag cool">Privacy in</span></div>
+          <p>It gets a <b>random 8-character slug</b> for its folder (so the URL isn't guessable) and a <code>noindex</code> tag injected into the head (so search engines skip it).</p>
+        </div>
+        <div class="lout"><span>Produces</span><strong>A page at<br><code>/pages/&lt;slug&gt;/</code></strong></div>
+      </div>
+
+      <div class="layer">
+        <div class="rail"><span class="node warm">2</span></div>
+        <div class="lbody">
+          <div class="lhead"><h3>Index</h3><span class="ltag warm">The record</span></div>
+          <p>The page is added to <code>manifest.json</code>, and the <b>dashboard is rebuilt</b> from it — a clean, house-style list of everything you've ever made, newest first.</p>
+        </div>
+        <div class="lout"><span>Produces</span><strong>An updated<br>dashboard page</strong></div>
+      </div>
+
+      <div class="layer">
+        <div class="rail"><span class="node hot">3</span></div>
+        <div class="lbody">
+          <div class="lhead"><h3>Push</h3><span class="ltag hot">To the web</span></div>
+          <p>Everything is committed and pushed to your <b>GitHub Pages</b> repo. GitHub serves it over HTTPS on a global CDN — fast, no server to run, full version history.</p>
+        </div>
+        <div class="lout"><span>Produces</span><strong>A live URL on<br>mullermtg.github.io</strong></div>
+      </div>
+
+      <div class="layer">
+        <div class="rail"><span class="node money">4</span></div>
+        <div class="lbody">
+          <div class="lhead"><h3>Open</h3><span class="ltag money">Done</span></div>
+          <p>The link is <b>copied to your clipboard</b>, the script waits for Pages to finish building, then opens the page in your browser. You paste the link to whoever you want.</p>
+        </div>
+        <div class="lout"><span>Produces</span><strong>A link in hand,<br>page on screen</strong></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 02 PIECES ============ -->
+  <section id="pieces">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Where everything lives</h2></div>
+    <p class="sec-sub">Two halves: the content (your pages, on GitHub) and the tooling (the scripts, next to the skill). Nothing hidden, all on your machine.</p>
+
+    <table>
+      <thead><tr><th>Piece</th><th>Where</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>Content repo</td><td><code>~/Projects/pages</code> → <code>github.com/Mullermtg/pages</code></td><td>Holds every published page and the dashboard. Pushed to GitHub Pages, served at <code>mullermtg.github.io/pages/</code>.</td></tr>
+        <tr><td>Dashboard</td><td><code>index.html</code> in that repo</td><td>Auto-generated list of all pages, newest first. Your "see earlier work" home. Rebuilt on every publish.</td></tr>
+        <tr><td>The command</td><td><code>~/.claude/skills/html-creator/publish.sh</code></td><td>The one script that runs the whole pipeline. Takes a file and a title.</td></tr>
+        <tr><td>Dashboard builder</td><td><code>build_dashboard.py</code></td><td>Renders <code>manifest.json</code> into the dashboard, in house style.</td></tr>
+        <tr><td>Docs</td><td><code>publishing.md</code></td><td>How it all works, plus the recipe to add a password later.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ 03 PRIVACY ============ -->
+  <section id="privacy">
+    <div class="sec-head"><span class="sec-num">03</span><h2>The privacy picture, honestly</h2></div>
+    <p class="sec-sub">You chose public links with no password — the simplest path. Here's exactly what that protects and the one trade-off that comes with going free.</p>
+
+    <div class="gap">
+      <div class="gap-col">
+        <h4>What's covered</h4>
+        <div class="where">protected</div>
+        <div class="gap-row"><span>Showing up in Google</span><b>No — noindex + robots</b></div>
+        <div class="gap-row"><span>Guessable by strangers</span><b>No — random slug</b></div>
+        <div class="gap-row"><span>Shareable with anyone</span><b>Yes — just send the link</b></div>
+        <div class="gap-row"><span>Cost</span><b>Free, forever</b></div>
+      </div>
+      <div class="gap-col away">
+        <h4>The trade-off</h4>
+        <div class="where">free-tier reality</div>
+        <div class="gap-row"><span>Repo visibility</span><b>Public</b></div>
+        <div class="gap-row"><span>Raw files findable</span><b>Yes, if someone finds the repo</b></div>
+        <div class="gap-row"><span>Anyone gets blocked out</span><b>No — nothing is auth-walled</b></div>
+        <div class="gap-row"><span>Fix available</span><b>Yes — a password layer</b></div>
+      </div>
+    </div>
+
+    <p class="gap-note">The only soft spot: free GitHub Pages requires a <b>public</b> repo, so the raw HTML is technically visible at <code>github.com/Mullermtg/pages</code> to anyone who finds it. The random slugs and noindex keep pages out of search and off the radar, which covers normal sharing. If you ever want them genuinely unreadable, the documented next step is a <b>StatiCrypt password</b> — it AES-encrypts each page so the repo can stay public and free while the content is a locked blob without the key.</p>
+  </section>
+
+  <!-- ============ 04 USING IT ============ -->
+  <section id="using">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Using it, day to day</h2></div>
+    <p class="sec-sub">Three things you'll actually do. None of them involve a dashboard, a login, or a config file.</p>
+
+    <div class="why">
+      <div class="wy">
+        <h3>Make one</h3>
+        <p>Just ask for a page like you always have. The publish step is wired into the skill, so it runs automatically. Say <b>"local only"</b> if you ever want to skip it.</p>
+      </div>
+      <div class="wy">
+        <h3>Share one</h3>
+        <p>The link is already on your clipboard when the page opens — <code>mullermtg.github.io/pages/&lt;slug&gt;/</code>. Paste it to a client or teammate. It just works in their browser.</p>
+      </div>
+      <div class="wy">
+        <h3>Revisit past work</h3>
+        <p>Open the dashboard at <b>mullermtg.github.io/pages/</b>. Everything you've made is listed newest-first with its date and a one-click link.</p>
+      </div>
+    </div>
+
+    <div class="cmd"><span class="c-comment"># and if you ever want to publish a file by hand:</span><br><span class="c-prompt">$</span> ~/.claude/skills/html-creator/publish.sh ~/Downloads/my-page.html "My Page Title"</div>
+  </section>
+
+  <div class="move">
+    <div class="move-mark">→</div>
+    <div class="move-body">
+      <h3>The takeaway</h3>
+      <p>You now have a <b>self-updating archive with shareable links</b>, built and tested entirely from the terminal — no dashboards, no monthly cost. The page you're reading is the first real one through the pipeline; it's listed on your dashboard right now. If "public repo" ever starts to bug you, the password upgrade is a small, documented change away — just say the word.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>HTML Creator · auto-publishing to GitHub Pages · set up 14 June 2026</span>
+  <code>~/.claude/skills/html-creator/publishing.md</code>
+</footer>
+
+</body>
+</html>

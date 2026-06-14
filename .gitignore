@@ -1,0 +1,7 @@
+# Local-only — encrypted pages' index + their passwords. NEVER push these.
+private/
+.private-manifest.json
+.staticrypt.json
+
+# stray browse runtime state — never commit
+.gstack/

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pages · Martin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,440;9..144,560;9..144,640&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF9F4; --ink:#1B1915; --ink-soft:#5C574C; --ink-faint:#8A8478;
+  --rule:#E6E1D5; --rule-soft:#EFEBE1; --tint:#F3EFE6; --accent:#B4552D;
+  --maxw:880px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#171511; --ink:#EDE9DF; --ink-soft:#B0AA9B; --ink-faint:#7E7869;
+    --rule:#332F27; --rule-soft:#2A2720; --tint:#211E18; --accent:#D97B4F;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+::selection{background:var(--accent);color:var(--paper)}
+header{padding:56px 0 0}
+.eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:'Fraunces',serif;font-weight:560;font-size:clamp(34px,5vw,52px);line-height:1.12;letter-spacing:-.01em;margin:10px 0 6px}
+.lede{font-size:17px;color:var(--ink-soft);max-width:56ch}
+.stats{display:flex;gap:40px;margin:34px 0 8px;padding:22px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.stat .fig{font-family:'Fraunces',serif;font-size:30px;font-weight:560;font-variant-numeric:tabular-nums}
+.stat .lab{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+main{padding:18px 0 80px}
+.row{display:grid;grid-template-columns:1fr auto 18px;align-items:baseline;gap:18px;
+  padding:16px 4px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;
+  transition:background .12s,padding .12s}
+.row:hover{background:var(--tint);padding-left:12px;padding-right:12px}
+.r-title{font-family:'Fraunces',serif;font-size:18px;font-weight:560}
+.r-date{font-size:13px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.r-go{color:var(--accent);opacity:0;transition:opacity .12s}
+.row:hover .r-go{opacity:1}
+.empty{padding:40px 0;color:var(--ink-faint)}
+footer{padding:28px 0 60px;border-top:1px solid var(--rule);color:var(--ink-faint);font-size:13px}
+
+@media(max-width:520px){.stats{gap:28px}.r-date{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Workspace</div>
+    <h1>Pages</h1>
+    <p class="lede">Everything made with the HTML creator, newest first. Each link is live and shareable.</p>
+    <div class="stats">
+      <div class="stat"><div class="fig">1</div><div class="lab">Pages</div></div>
+      <div class="stat"><div class="fig">2026-06-14</div><div class="lab">Latest</div></div>
+    </div>
+  </header>
+  <main>
+    <a class="row" href="./d2297d7e/"><span class="r-title">How HTML pages now publish themselves</span><span class="r-date">2026-06-14</span><span class="r-go">→</span></a>
+  </main>
+  <footer>Private index · not search-indexed · served from GitHub Pages</footer>
+</div>
+</body>
+</html>
